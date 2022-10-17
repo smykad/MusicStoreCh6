@@ -19,10 +19,22 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int ArtistSort=0, int GenreSort=0)
         {
-            var musicContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
-            return View(await musicContext.ToListAsync());
+            if (ArtistSort == 1 && GenreSort == 0)
+                return View(_context.Albums.Include(a => a.Artist).OrderBy(a=>a.Artist.Name)
+                    .Include(a => a.Genre).ToList());
+            else if (ArtistSort == 0 && GenreSort == 1)
+                return View(_context.Albums.Include(a => a.Artist)
+                    .Include(a => a.Genre).OrderBy(g => g.Genre.Name).ToList());
+            else if (ArtistSort == 2 && GenreSort == 0)
+                return View(_context.Albums.Include(a => a.Artist)
+                    .OrderByDescending(a => a.Artist.Name).Include(a => a.Genre).ToList());
+            else if (ArtistSort == 0 && GenreSort == 2)
+                return View(_context.Albums.Include(a => a.Artist)
+                    .Include(a => a.Genre).OrderByDescending(g => g.Genre.Name).ToList());
+            else
+                return View(_context.Albums.Include(a => a.Artist).Include(a => a.Genre).ToList());
         }
 
         // GET: Album/Details/5

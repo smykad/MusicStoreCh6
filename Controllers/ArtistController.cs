@@ -19,9 +19,14 @@ namespace MusicStore.Controllers
         }
 
         // GET: Artist
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int ArtistSort=0)
         {
-            return View(await _context.Artists.ToListAsync());
+            if (ArtistSort == 2)
+                return View(_context.Artists.OrderByDescending(a => a.Name).ToList());
+            else if (ArtistSort == 1)
+                return View(_context.Artists.OrderBy(a => a.Name).ToList());
+            else
+                return View(await _context.Artists.ToListAsync());
         }
 
         // GET: Artist/Details/5
